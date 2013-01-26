@@ -110,4 +110,4 @@ UpgradeLog*.XML
 # Clone director
 Working
 
-System.Web.Razor
+.idea

@@ -11,11 +11,12 @@ end
 namespace :razor do
   ASPNET_GIT_PATH = 'https://git01.codeplex.com/aspnetwebstack.git'
   WORKING_PATH = 'Working'
-  NEW_SOURCE_PATH = 'src'
   RAZOR_DIR = 'System.Web.Razor'
-  SOURCE_RAZOR_DIRECTORY = "#{WORKING_PATH}/aspnetwebstack/src/#{RAZOR_DIR}"
-  DEST_RAZOR_DIRECTORY = "#{NEW_SOURCE_PATH}/#{RAZOR_DIR}"
-  
+  SOURCE_PATH = 'aspnetwebstack/src'
+  RAZOR_PROJECT = "#{WORKING_PATH}/#{SOURCE_PATH}/#{RAZOR_DIR}/System.Web.Razor.csproj"
+  BIN_LOCATION = "#{WORKING_PATH}/#{SOURCE_PATH}/bin/Release"
+  CONFIGURATION = 'Release'
+
   Dir.class_eval do
     def self.logged_chdir(dir, &block)
       puts "Entering #{dir}"
@@ -43,11 +44,14 @@ namespace :razor do
       Git.clone ASPNET_GIT_PATH
     end
   end
-  
-  task :update_source => :grab_code do
-    puts "Moving code from #{SOURCE_RAZOR_DIRECTORY} to #{DEST_RAZOR_DIRECTORY}"
-    FileUtils.rm_rf(DEST_RAZOR_DIRECTORY) if File.exists? DEST_RAZOR_DIRECTORY
-    
-    FileUtils.mv(SOURCE_RAZOR_DIRECTORY, DEST_RAZOR_DIRECTORY)
+
+  desc "Builds the project"
+  msbuild :build => :grab_code do |msb|
+      msb.properties :configuration => CONFIGURATION
+      msb.targets :Clean, :Build
+      msb.solution = RAZOR_PROJECT
+  end
+
+  desc "Builds tne nuget"
   end
 end
