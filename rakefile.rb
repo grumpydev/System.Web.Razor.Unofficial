@@ -77,6 +77,21 @@ namespace :razor do
     nuget.execute
   end
 
+  desc "Pushes the nuget packages in the nuget folder up to the nuget gallary and symbolsource.org. Also publishes the packages into the feeds."
+  task :nuget_publish, :api_key do |task, args|
+    nupkgs = FileList["#{NUGET_OUTPUT_DIR}/*.nupkg"]
+
+    nupkgs.each do |nupkg|
+        puts "Pushing #{nupkg}"
+        nuget_push = NuGetPush.new
+	      nuget_push.apikey = args.api_key if !args.empty?
+        nuget_push.command = NUGET_EXE
+        nuget_push.package = "\"" + nupkg + "\""
+        nuget_push.create_only = false
+        nuget_push.execute
+    end
+  end
+
   def update_xml(xml_path)
     #Open up the xml file
     xml_file = File.new(xml_path)
