@@ -10,7 +10,7 @@ end
 
 namespace :razor do
   ## Can't grab this from the assembly info because it uses ifdefs'
-  VERSION = "2.0"
+  VERSION = "2.0.1"
 
   ASPNET_GIT_PATH = 'https://git01.codeplex.com/aspnetwebstack.git'
   WORKING_PATH = 'Working'
