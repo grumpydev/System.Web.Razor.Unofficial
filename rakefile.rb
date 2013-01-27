@@ -52,8 +52,18 @@ namespace :razor do
     end
   end
 
+  task :disable_signing => :grab_code do
+    content = File.read(RAZOR_PROJECT)
+
+    new_content = content.gsub(/\<\/Project\>/, "<PropertyGroup><SignAssembly>false</SignAssembly><DelaySign>false</DelaySign></PropertyGroup></Project>")
+
+    File.open(RAZOR_PROJECT, "w") do |io|
+        io.write new_content
+    end
+  end
+
   desc "Builds the project"
-  msbuild :build => :grab_code do |msb|
+  msbuild :build => :disable_signing do |msb|
       msb.properties :configuration => CONFIGURATION
       msb.targets :Clean, :Build
       msb.solution = RAZOR_PROJECT
