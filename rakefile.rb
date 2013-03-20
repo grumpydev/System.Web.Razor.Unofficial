@@ -10,7 +10,7 @@ end
 
 namespace :razor do
   ## Can't grab this from the assembly info because it uses ifdefs'
-  VERSION = "2.0.1"
+  VERSION = "2.0.2"
 
   ASPNET_GIT_PATH = 'https://git01.codeplex.com/aspnetwebstack.git'
   WORKING_PATH = 'Working'
@@ -51,8 +51,18 @@ namespace :razor do
       Git.clone ASPNET_GIT_PATH
     end
   end
+  
+  task :rename_assemblyname => :grab_code do
+    content = File.read(RAZOR_PROJECT)
 
-  task :disable_signing => :grab_code do
+    new_content = content.gsub("<AssemblyName>System.Web.Razor</AssemblyName>", "<AssemblyName>System.Web.Razor.Unofficial</AssemblyName>")
+
+    File.open(RAZOR_PROJECT, "w") do |io|
+        io.write new_content
+    end
+  end
+  
+  task :disable_signing => :rename_assemblyname do
     content = File.read(RAZOR_PROJECT)
 
     new_content = content.gsub(/\<\/Project\>/, "<PropertyGroup><SignAssembly>false</SignAssembly><DelaySign>false</DelaySign></PropertyGroup></Project>")
@@ -64,7 +74,7 @@ namespace :razor do
 
   desc "Builds the project"
   msbuild :build => :disable_signing do |msb|
-      msb.properties :configuration => CONFIGURATION
+      msb.properties = { :configuration => CONFIGURATION, "TargetFrameworkProfile" => "", "TargetFrameworkVersion" => "v4.0" }
       msb.targets :Clean, :Build
       msb.solution = RAZOR_PROJECT
   end
