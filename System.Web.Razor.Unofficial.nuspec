@@ -14,7 +14,7 @@
   <tags>Razor, Unofficial</tags>
   </metadata>
   <files>
-    <file src='Working\aspnetwebstack\bin\Release\System.Web.Razor.dll' target='lib\net40' />
-    <file src='Working\aspnetwebstack\bin\Release\System.Web.Razor.pdb' target='lib\net40' />
+    <file src='Working\aspnetwebstack\bin\Release\System.Web.Razor.Unofficial.dll' target='lib\net40' />
+    <file src='Working\aspnetwebstack\bin\Release\System.Web.Razor.Unofficial.pdb' target='lib\net40' />
   </files>
 </package>
