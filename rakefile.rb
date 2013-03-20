@@ -74,7 +74,7 @@ namespace :razor do
 
   desc "Builds the project"
   msbuild :build => :disable_signing do |msb|
-      msb.properties :configuration => CONFIGURATION
+      msb.properties = { :configuration => CONFIGURATION, "TargetFrameworkProfile" => "", "TargetFrameworkVersion" => "v4.0" }
       msb.targets :Clean, :Build
       msb.solution = RAZOR_PROJECT
   end
